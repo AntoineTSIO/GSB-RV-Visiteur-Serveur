@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import datetime
 
 from flask import *
 import json
@@ -92,7 +93,8 @@ def addRapportVisite():
     numRapport = modeleGSBRV.enregistrerRapportVisite( unRapport[ 'matricule' ] ,
                                                           unRapport[ 'praticien' ] ,
                                                           unRapport[ 'visite' ] ,
-                                                          unRapport[ 'bilan' ] )
+                                                          unRapport[ 'bilan' ] ,
+                                                          str(datetime.date.today().isoformat()))
 
     reponse = make_response( '' )
     if numRapport != None :
