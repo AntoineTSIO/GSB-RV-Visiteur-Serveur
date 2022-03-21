@@ -15,6 +15,7 @@ def getConnexionBD():
                 host='localhost',
                 user='gsb',
                 password='azerty',
+                port='3306',
                 database='gsbrv'
             )
         return connexionBD
@@ -37,9 +38,10 @@ def seConnecter(matricule, mdp):
 					) 
 					and t1.tra_role <> 'Responsable'
 					and Visiteur.vis_matricule = %s
+					and Visiteur.vis_mdp = %s
 				'''
 
-        curseur.execute(requete, (matricule,))
+        curseur.execute(requete, (matricule,mdp))
 
         enregistrement = curseur.fetchone()
 
@@ -48,6 +50,7 @@ def seConnecter(matricule, mdp):
             visiteur['vis_matricule'] = matricule
             visiteur['vis_nom'] = enregistrement[0]
             visiteur['vis_prenom'] = enregistrement[1]
+            visiteur['vis_mdp'] = mdp
 
         curseur.close()
         return visiteur
