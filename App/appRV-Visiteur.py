@@ -87,18 +87,13 @@ def getMedicaments():
     return reponse
 
 
-@app.route('/rapports', methods=['POST'])
-def addRapportVisite():
-    unRapport = json.loads(request.data)
-    numRapport = modeleGSBRV.enregistrerRapportVisite( unRapport[ 'matricule' ] ,
-                                                          unRapport[ 'praticien' ] ,
-                                                          unRapport[ 'visite' ] ,
-                                                          unRapport[ 'bilan' ] ,
-                                                          str(datetime.date.today().isoformat()))
+@app.route('/rapports/<matricule>/<dateVisite>/<bilan>/<coef_confiance>/<rap_date_saisie>/<rap_motif>/<pra_num>', methods=['POST'])
+def addRapportVisite(matricule, dateVisite, bilan, coef_confiance, rap_date_saisie, rap_motif, pra_num):
+    numRapport = modeleGSBRV.enregistrerRapportVisite(matricule, dateVisite, bilan, coef_confiance, rap_date_saisie, rap_motif, pra_num)
 
     reponse = make_response( '' )
     if numRapport != None :
-        reponse.headers[ 'Location' ] = '/rapports/%s/%d' % ( unRapport[ 'matricule' ] , numRapport )
+        reponse.headers[ 'Location' ] = '/rapports/%s/%d' % (matricule, numRapport )
         reponse.status_code = 201
     else :
         reponse.status_code = 409
@@ -125,4 +120,4 @@ def addEchantillonsOfferts( matricule , numRapport ) :
 
 
 if __name__ == '__main__' :
-    app.run( debug = True , host = '172.20.38.2' , port = 5000 )
+    app.run( debug = True , host = '192.168.0.47' , port = 5000 )

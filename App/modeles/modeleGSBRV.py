@@ -67,6 +67,8 @@ def getRapportsVisite(matricule, mois, annee):
 						rv.rap_num ,
 						rv.rap_date_visite ,
 						rv.rap_bilan ,
+						rv.rap_motif,
+						rv.rap_coef_confiance,
 						p.pra_nom ,
 						p.pra_prenom ,
 						p.pra_cp ,
@@ -91,10 +93,12 @@ def getRapportsVisite(matricule, mois, annee):
             unRapport['rap_date_visite'] = '%04d-%02d-%02d' % (
             unEnregistrement[1].year, unEnregistrement[1].month, unEnregistrement[1].day)
             unRapport['rap_bilan'] = unEnregistrement[2]
-            unRapport['pra_nom'] = unEnregistrement[3]
-            unRapport['pra_prenom'] = unEnregistrement[4]
-            unRapport['pra_cp'] = unEnregistrement[5]
-            unRapport['pra_ville'] = unEnregistrement[5]
+            unRapport['rap_motif'] = unEnregistrement[3]
+            unRapport['rap_coef_confiance'] = unEnregistrement[4]
+            unRapport['pra_nom'] = unEnregistrement[5]
+            unRapport['pra_prenom'] = unEnregistrement[6]
+            unRapport['pra_cp'] = unEnregistrement[7]
+            unRapport['pra_ville'] = unEnregistrement[8]
             rapports.append(unRapport)
 
         curseur.close()
@@ -213,7 +217,7 @@ def genererNumeroRapportVisite(matricule):
         return None
 
 
-def enregistrerRapportVisite(matricule, numPraticien, dateVisite, bilan, rap_date_saisie):
+def enregistrerRapportVisite(matricule, dateVisite, bilan, coef_confiance, rap_date_saisie, rap_motif, pra_num):
     numRapportVisite = genererNumeroRapportVisite(matricule)
 
     if numRapportVisite != None:
@@ -222,11 +226,11 @@ def enregistrerRapportVisite(matricule, numPraticien, dateVisite, bilan, rap_dat
             curseur = getConnexionBD().cursor()
 
             requete = '''
-				insert into RapportVisite( vis_matricule , rap_num , rap_date_visite , rap_bilan , pra_num , rap_date_saisie )
-				values( %s , %s , %s , %s , %s , %s )
+				insert into RapportVisite( vis_matricule , rap_num , rap_date_visite , rap_bilan , rap_coef_confiance , rap_date_saisie , rap_motif , pra_num)
+				values( %s , %s , %s , %s , %s , %s , %s , %s )
 				'''
 
-            curseur.execute(requete, (matricule, numRapportVisite, dateVisite, bilan, numPraticien, rap_date_saisie))
+            curseur.execute(requete, (matricule, numRapportVisite, dateVisite, bilan, coef_confiance, rap_date_saisie, rap_motif, pra_num))
             connexionBD.commit()
             curseur.close()
 
